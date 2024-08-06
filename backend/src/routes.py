@@ -1,7 +1,24 @@
-from flask import Blueprint, request, jsonify
-from .models import db, User, Card
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
+from .auth.models import db, User, Card
+from app.app import app, db
+from app.auth.forms import RegistrationForm
+
 
 bp = Blueprint('main', __name__)
+
+@app.route('/api/register', methods=['POST'])
+def api_register():
+    data = request.json
+    form = RegistrationForm(data=data, meta={'csrf': False})
+
+    if form.validate():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'errors': form.errors}), 400
+
 
 @bp.route('/cards', methods=['GET', 'POST'])
 def manage_cards():
