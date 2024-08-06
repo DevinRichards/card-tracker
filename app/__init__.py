@@ -1,14 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from .config import Config
-from .models import User  
-from . import routes, auth 
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+from config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -23,6 +21,7 @@ def create_app():
     migrate.init_app(app, db)
     login.init_app(app)
 
+    from . import routes, auth
     app.register_blueprint(routes.bp)
     app.register_blueprint(auth.bp, url_prefix='/auth')
 
@@ -30,4 +29,5 @@ def create_app():
 
 @login.user_loader
 def load_user(user_id):
+    from .models import User  # Import here to avoid circular dependency
     return User.query.get(int(user_id))
