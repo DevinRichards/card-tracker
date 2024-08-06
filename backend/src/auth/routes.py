@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from .forms import LoginForm, RegistrationForm
 from .models import User
-from src import db
+from backend.src.app import db
 
 bp = Blueprint('auth', __name__)
 
