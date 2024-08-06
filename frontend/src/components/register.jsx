@@ -1,32 +1,36 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const history = useHistory();
+    const [password2, setPassword2] = useState('');
+    const history = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/auth/login', {
+            const response = await axios.post('/auth/register', {
                 username,
-                password
+                email,
+                password,
+                password2
             });
             if (response.data.success) {
-                history.push('/');
+                history.push('/login');
             } else {
                 alert(response.data.message);
             }
         } catch (error) {
-            console.error('Error logging in:', error);
+            console.error('Error registering:', error);
         }
     };
 
     return (
         <div>
-            <h2>Login</h2>
+            <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Username</label>
@@ -37,6 +41,14 @@ const Login = () => {
                     />
                 </div>
                 <div>
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div>
                     <label>Password</label>
                     <input
                         type="password"
@@ -44,10 +56,18 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <button type="submit">Login</button>
+                <div>
+                    <label>Repeat Password</label>
+                    <input
+                        type="password"
+                        value={password2}
+                        onChange={(e) => setPassword2(e.target.value)}
+                    />
+                </div>
+                <button type="submit">Register</button>
             </form>
         </div>
     );
 };
 
-export default Login;
+export default Register;

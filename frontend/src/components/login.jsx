@@ -1,36 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const Login = () => {
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [password2, setPassword2] = useState('');
-    const history = useHistory();
+    const history = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/auth/register', {
+            const response = await axios.post('/auth/login', {
                 username,
-                email,
-                password,
-                password2
+                password
             });
             if (response.data.success) {
-                history.push('/login');
+                history.push('/');
             } else {
                 alert(response.data.message);
             }
         } catch (error) {
-            console.error('Error registering:', error);
+            console.error('Error logging in:', error);
         }
     };
 
     return (
         <div>
-            <h2>Register</h2>
+            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Username</label>
@@ -41,14 +37,6 @@ const Register = () => {
                     />
                 </div>
                 <div>
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div>
                     <label>Password</label>
                     <input
                         type="password"
@@ -56,18 +44,10 @@ const Register = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>Repeat Password</label>
-                    <input
-                        type="password"
-                        value={password2}
-                        onChange={(e) => setPassword2(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Register</button>
+                <button type="submit">Login</button>
             </form>
         </div>
     );
 };
 
-export default Register;
+export default Login;
