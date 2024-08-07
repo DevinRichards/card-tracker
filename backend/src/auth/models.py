@@ -21,4 +21,5 @@ class Card(db.Model):
     set = db.Column(db.String(64), nullable=False)
     price = db.Column(db.Float)
     alert_price = db.Column(db.Float)
+    quantity = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
